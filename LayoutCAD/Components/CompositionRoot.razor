@@ -2,10 +2,12 @@
 
 <!-- View-->
 <!-- We always have a background grid-->
-<BackgroundGrid />
+<BackgroundGrid ViewModel="@_vmCompRoot.BackgroundGridVM"/>
 
 <h3>LayoutCAD</h3>
 
 @code {
-
+    // Intellisense seems to have flaked out in the components, so do the
+    // heavy lifting in a regular class that we create an instance of
+    private readonly VMCompositionRoot _vmCompRoot = new VMCompositionRoot();
 }
