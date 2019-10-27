@@ -8,9 +8,9 @@ namespace LayoutCAD.ViewModel
     /// </summary>
     public class ViewPort
     {
-        public float ModelSpaceTop { get; } = 0.0f;
+        public float ModelSpaceTop { get; private set; } = 0.0f;
         public float ModelSpaceBottom => ModelSpaceTop + _apatureY;
-        public float ModelSpaceLeft { get; } = 0.0f;
+        public float ModelSpaceLeft { get; private set; } = 0.0f;
         public float ModelSpaceRight => ModelSpaceLeft + _apatureX;
 
         private float _apatureX;
@@ -20,12 +20,12 @@ namespace LayoutCAD.ViewModel
 
         internal float ToViewSpaceX(float modelX)
         {
-            return modelX;
+            return (modelX /_apatureX) * ViewWidth;
         }
 
         internal float ToViewSpaceY(float modelY)
         {
-            return modelY;
+            return (modelY / _apatureY) * ViewHeight;
         }
 
         public float ViewHeight { get; }
@@ -36,6 +36,15 @@ namespace LayoutCAD.ViewModel
             _apatureY = apatureY;
             ViewWidth = apatureX;
             ViewHeight = apatureY;
+        }
+
+        internal void Zoom(float delta)
+        {
+            // Don't let the apature become negative
+            if (delta < 0.0f && (_apatureX < -delta || _apatureY < -delta)) return;
+            
+            _apatureX += delta;
+            _apatureY += delta;
         }
     }
 }

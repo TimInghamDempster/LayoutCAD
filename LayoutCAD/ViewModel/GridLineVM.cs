@@ -11,7 +11,7 @@
         // Tells us where to draw the label
         public ICoordinate TextPos { get; }
 
-        public GridLineVM(WorldCoordinate start, WorldCoordinate end, bool isHorizontal, double lineSeparation, double gridHeight)
+        public GridLineVM(ModelCoordinate start, ModelCoordinate end, bool isHorizontal, double lineSeparation, double gridHeight)
         {
             Start = start;
             End = end;
@@ -21,7 +21,7 @@
 
             if (isHorizontal)
             {
-                Text = start.ViewSpaceY.ToString();
+                Text = start.ModelSpaceY.ToString();
                 TextPos = 
                     new OffsetCoordinate( 
                         start,
@@ -29,7 +29,7 @@
             }
             else
             {
-                Text = start.ViewSpaceX.ToString();
+                Text = start.ModelSpaceX.ToString();
                 TextPos =
                     new OffsetCoordinate(
                         end,

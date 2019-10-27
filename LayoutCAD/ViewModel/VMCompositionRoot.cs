@@ -20,14 +20,14 @@
                 (data) =>
                 data.isHorizontal ?
                     new GridLineVM(
-                        new WorldCoordinate(_viewPort.ModelSpaceLeft, data.modelCoord, _viewPort),
-                        new WorldCoordinate(_viewPort.ModelSpaceRight, data.modelCoord, _viewPort),
+                        new ModelCoordinate(_viewPort.ModelSpaceLeft, data.modelCoord, _viewPort),
+                        new ModelCoordinate(_viewPort.ModelSpaceRight, data.modelCoord, _viewPort),
                         data.isHorizontal,
                         BackgroundGridVM.LineSeparation_mm,
                         _viewPort.ViewHeight) :
                     new GridLineVM(
-                        new WorldCoordinate(data.modelCoord, _viewPort.ModelSpaceTop, _viewPort),
-                        new WorldCoordinate(data.modelCoord, _viewPort.ModelSpaceBottom, _viewPort),
+                        new ModelCoordinate(data.modelCoord, _viewPort.ModelSpaceTop, _viewPort),
+                        new ModelCoordinate(data.modelCoord, _viewPort.ModelSpaceBottom, _viewPort),
                         data.isHorizontal,
                         BackgroundGridVM.LineSeparation_mm,
                         _viewPort.ViewHeight));

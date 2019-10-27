@@ -49,5 +49,10 @@ namespace LayoutCAD.ViewModel
             _viewPort = viewPort;
             _lineFactory = lineFactory;
         }
+
+        public void OnMouseWheel(float delta)
+        {
+            _viewPort.Zoom(delta);
+        }
     }
 }

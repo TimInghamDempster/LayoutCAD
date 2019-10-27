@@ -6,14 +6,14 @@
     /// </summary>
     public class OffsetCoordinate : ICoordinate
     {
-        private readonly WorldCoordinate _worldCoordinate;
+        private readonly ModelCoordinate _worldCoordinate;
         private readonly ViewCoordinate _offset;
 
         public float ViewSpaceX => _worldCoordinate.ViewSpaceX + _offset.ViewSpaceX;
 
         public float ViewSpaceY => _worldCoordinate.ViewSpaceY + _offset.ViewSpaceY;
 
-        public OffsetCoordinate(WorldCoordinate worldCoordinate, ViewCoordinate offset)
+        public OffsetCoordinate(ModelCoordinate worldCoordinate, ViewCoordinate offset)
         {
             _worldCoordinate = worldCoordinate;
             _offset = offset;
