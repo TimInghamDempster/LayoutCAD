@@ -1,4 +1,6 @@
-﻿namespace LayoutCAD.ViewModel
+﻿using System;
+
+namespace LayoutCAD.ViewModel
 {
     /// <summary>
     /// Defines the size and location of our view of the
@@ -6,20 +8,34 @@
     /// </summary>
     public class ViewPort
     {
-        public double ModelSpaceTop { get; } = 0.0;
-        public double ModelSpaceBottom { get; }
-        public double ModelSpaceLeft { get; } = 0.0;
-        public double ModelSpaceRight { get; }
+        public float ModelSpaceTop { get; } = 0.0f;
+        public float ModelSpaceBottom => ModelSpaceTop + _apatureY;
+        public float ModelSpaceLeft { get; } = 0.0f;
+        public float ModelSpaceRight => ModelSpaceLeft + _apatureX;
 
-        public int ViewWidth { get; }
-        public int ViewHeight { get; }
+        private float _apatureX;
+        private float _apatureY;
 
-        public ViewPort(double rightCoord, double bottomCoord)
+        public float ViewWidth { get; }
+
+        internal float ToViewSpaceX(float modelX)
         {
-            ModelSpaceRight = rightCoord;
-            ModelSpaceBottom = bottomCoord;
-            ViewWidth = (int)rightCoord;
-            ViewHeight = (int)bottomCoord;
+            return modelX;
+        }
+
+        internal float ToViewSpaceY(float modelY)
+        {
+            return modelY;
+        }
+
+        public float ViewHeight { get; }
+
+        public ViewPort(float apatureX, float apatureY)
+        {
+            _apatureX = apatureX;
+            _apatureY = apatureY;
+            ViewWidth = apatureX;
+            ViewHeight = apatureY;
         }
     }
 }

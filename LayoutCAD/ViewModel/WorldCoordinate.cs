@@ -6,13 +6,19 @@
     /// </summary>
     public class WorldCoordinate : ICoordinate
     {
-        public int ViewSpaceX { get; }
-        public int ViewSpaceY { get; }
+        private readonly ViewPort _viewPort;
 
-        public WorldCoordinate(double x, double y)
+        private readonly float _modelX;
+        private readonly float _modelY;
+
+        public float ViewSpaceX => _viewPort.ToViewSpaceX(_modelX);
+        public float ViewSpaceY => _viewPort.ToViewSpaceY(_modelY);
+
+        public WorldCoordinate(float x, float y, ViewPort viewPort)
         {
-            ViewSpaceX = (int)x;
-            ViewSpaceY = (int)y;
+            _modelX = x;
+            _modelY = y;
+            _viewPort = viewPort;
         }
     }
 }

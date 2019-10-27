@@ -2,7 +2,7 @@
 {
     public interface ICoordinate
     {
-        int ViewSpaceX { get; }
-        int ViewSpaceY { get; }
+        float ViewSpaceX { get; }
+        float ViewSpaceY { get; }
     }
 }

@@ -6,8 +6,8 @@
     /// </summary>
     public class VMCompositionRoot
     {
-        private const double _screenWidth = 900.0;
-        private const double _screenHeight = 900.0;
+        private const float _screenWidth = 900.0f;
+        private const float _screenHeight = 900.0f;
 
         private readonly ViewPort _viewPort = new ViewPort(_screenWidth, _screenHeight);
         
@@ -20,14 +20,14 @@
                 (data) =>
                 data.isHorizontal ?
                     new GridLineVM(
-                        new WorldCoordinate(_viewPort.ModelSpaceLeft, data.modelCoord),
-                        new WorldCoordinate(_viewPort.ModelSpaceRight, data.modelCoord),
+                        new WorldCoordinate(_viewPort.ModelSpaceLeft, data.modelCoord, _viewPort),
+                        new WorldCoordinate(_viewPort.ModelSpaceRight, data.modelCoord, _viewPort),
                         data.isHorizontal,
                         BackgroundGridVM.LineSeparation_mm,
                         _viewPort.ViewHeight) :
                     new GridLineVM(
-                        new WorldCoordinate(data.modelCoord, _viewPort.ModelSpaceTop),
-                        new WorldCoordinate(data.modelCoord, _viewPort.ModelSpaceBottom),
+                        new WorldCoordinate(data.modelCoord, _viewPort.ModelSpaceTop, _viewPort),
+                        new WorldCoordinate(data.modelCoord, _viewPort.ModelSpaceBottom, _viewPort),
                         data.isHorizontal,
                         BackgroundGridVM.LineSeparation_mm,
                         _viewPort.ViewHeight));

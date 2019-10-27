@@ -9,14 +9,14 @@
         private readonly WorldCoordinate _worldCoordinate;
         private readonly ViewCoordinate _offset;
 
-        public int ViewSpaceX => _worldCoordinate.ViewSpaceX + _offset.ViewSpaceX;
+        public float ViewSpaceX => _worldCoordinate.ViewSpaceX + _offset.ViewSpaceX;
 
-        public int ViewSpaceY => _worldCoordinate.ViewSpaceY + _offset.ViewSpaceY;
+        public float ViewSpaceY => _worldCoordinate.ViewSpaceY + _offset.ViewSpaceY;
 
         public OffsetCoordinate(WorldCoordinate worldCoordinate, ViewCoordinate offset)
         {
-            this._worldCoordinate = worldCoordinate;
-            this._offset = offset;
+            _worldCoordinate = worldCoordinate;
+            _offset = offset;
         }
     }
 }

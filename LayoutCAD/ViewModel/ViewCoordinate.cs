@@ -6,10 +6,10 @@
     /// </summary>
     public class ViewCoordinate : ICoordinate
     {
-        public int ViewSpaceX { get; }
-        public int ViewSpaceY { get; }
+        public float ViewSpaceX { get; }
+        public float ViewSpaceY { get; }
 
-        public ViewCoordinate(int x, int y)
+        public ViewCoordinate(float x, float y)
         {
             ViewSpaceX = x;
             ViewSpaceY = y;
