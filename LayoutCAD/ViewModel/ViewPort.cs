@@ -9,7 +9,10 @@ namespace LayoutCAD.ViewModel
     /// </summary>
     public class ViewPort
     {
-        public Point Location { get; private set; }
+        private readonly Draggable _draggable;
+
+        private Point _location;
+        public Point Location => _location - DeltaToModelSpace(_draggable.CurrentOffset);
         public Point Apature { get; private set; }
 
         public Point ModelSpaceBottomRight => Location + Apature;
@@ -23,17 +26,27 @@ namespace LayoutCAD.ViewModel
             return Point.ComponentWiseMul(normalised, ViewSize);
         }
 
-         public Point ToModelSpace(Point viewSpacePoint)
-         {
-            var normalised = Point.ComponentWiseDiv(viewSpacePoint, ViewSize);
-            var scaled = Point.ComponentWiseMul(normalised, Apature);
+        public Point ToModelSpace(Point viewSpacePoint)
+        {
+            var scaled = DeltaToModelSpace(viewSpacePoint);
             return scaled + Location;
-         }
+        }
 
-        public ViewPort(Point modelSpaceLocation, Point modelSpaceApature)
+        // Deltas don't have absolute position so the viewport position
+        // shouldn't be included in the conversion, only the scaling
+        private Point DeltaToModelSpace(Point viewSpaceDelta)
+        {
+
+            var normalised = Point.ComponentWiseDiv(viewSpaceDelta, ViewSize);
+            var scaled = Point.ComponentWiseMul(normalised, Apature);
+            return scaled;
+        }
+
+        public ViewPort(Point modelSpaceLocation, Point modelSpaceApature, Draggable draggable)
         {
             Apature = modelSpaceApature;
-            Location = modelSpaceLocation;
+            _draggable = draggable;
+            _location = modelSpaceLocation;
             ViewSize = modelSpaceApature;
         }
 
@@ -47,12 +60,20 @@ namespace LayoutCAD.ViewModel
 
         internal void StartDrag(double screenX, double screenY)
         {
-            throw new NotImplementedException();
+            _draggable.StartDrag(screenX, screenY);
         }
 
         internal void Dragging(double screenX, double screenY)
         {
-            throw new NotImplementedException();
+            _draggable.Dragging(screenX, screenY);
+        }
+
+        internal void Drop()
+        {
+            // Negative because we are dragging the model by changing the
+            // apature, all other draggables change the model
+            _location -= DeltaToModelSpace(_draggable.CurrentOffset);
+            _draggable.Drop();
         }
     }
 }

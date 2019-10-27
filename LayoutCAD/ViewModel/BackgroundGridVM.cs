@@ -22,14 +22,14 @@ namespace LayoutCAD.ViewModel
         {
             get
             {
-                var numHorizontalLines = (int)(Math.Ceiling(_viewPort.Apature.Y / LineSeparation_mm));
+                var numHorizontalLines = (int)(Math.Ceiling(_viewPort.Apature.Y / LineSeparation_mm)) + 1;
                 var startPosVertical = (float)Math.Floor(_viewPort.Location.Y / LineSeparation_mm) * LineSeparation_mm;
                 for (int i = 0; i < numHorizontalLines; i++)
                 {
                     yield return _lineFactory((i * LineSeparation_mm + startPosVertical, true));
                 }
 
-                var numVerticalLines = (int)(Math.Ceiling(_viewPort.Apature.X / LineSeparation_mm));
+                var numVerticalLines = (int)(Math.Ceiling(_viewPort.Apature.X / LineSeparation_mm)) + 1;
                 var startPosHorizontal = (float)Math.Floor(_viewPort.Location.X / LineSeparation_mm) * LineSeparation_mm;
                 for (int i = 0; i < numVerticalLines; i++)
                 {
@@ -45,6 +45,12 @@ namespace LayoutCAD.ViewModel
             _viewPort = viewPort;
             _lineFactory = lineFactory;
         }
+
+        public void OnMouseUp()
+        {
+            _viewPort.Drop();
+        }
+
         public void OnMouseDown(double screenX, double screenY)
         {
             _viewPort.StartDrag(screenX, screenY);

@@ -9,6 +9,7 @@ namespace LayoutCAD.Model
     {
         public float X { get; set; }
         public float Y { get; set; }
+        public static Point Zero => new Point { X = 0, Y = 0 };
 
         public static Point operator -(Point a, Point b)
             => a + (-b);

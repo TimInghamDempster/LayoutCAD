@@ -15,7 +15,8 @@ namespace LayoutCAD.ViewModel
         private readonly ViewPort _viewPort = 
             new ViewPort(
                 new Point { X = 0.0f, Y = 0.0f },
-                new Point { X = _screenWidth, Y = _screenHeight });
+                new Point { X = _screenWidth, Y = _screenHeight },
+                new Draggable());
         
         public BackgroundGridVM BackgroundGridVM { get; }
 
