@@ -1,4 +1,7 @@
-﻿namespace LayoutCAD.ViewModel
+﻿using LayoutCAD.Model;
+using System;
+
+namespace LayoutCAD.ViewModel
 {
     public class GridLineVM
     {
@@ -11,7 +14,11 @@
         // Tells us where to draw the label
         public ICoordinate TextPos { get; }
 
-        public GridLineVM(ModelCoordinate start, ModelCoordinate end, bool isHorizontal, double lineSeparation, double gridHeight)
+        public GridLineVM(
+            Coordinate start,
+            Coordinate end,
+            bool isHorizontal,
+            Func<(Coordinate modelPos, Point offset), OffsetCoordinate> offsetCoordFactory)
         {
             Start = start;
             End = end;
@@ -21,19 +28,13 @@
 
             if (isHorizontal)
             {
-                Text = start.ModelSpaceY.ToString();
-                TextPos = 
-                    new OffsetCoordinate( 
-                        start,
-                        new ViewCoordinate(horizontalPad, 0));
+                Text = start.ModelSpacePoint.Y.ToString();
+                TextPos = offsetCoordFactory((start, new Point { X = horizontalPad, Y = 0 }));
             }
             else
             {
-                Text = start.ModelSpaceX.ToString();
-                TextPos =
-                    new OffsetCoordinate(
-                        end,
-                        new ViewCoordinate(0, -verticalPad));
+                Text = start.ModelSpacePoint.X.ToString();
+                TextPos = offsetCoordFactory((end, new Point { X = 0, Y = -verticalPad }));
             }
 
             // The 0 labels always look weird, so get rid of them

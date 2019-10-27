@@ -1,8 +1,9 @@
-﻿namespace LayoutCAD.ViewModel
+﻿using LayoutCAD.Model;
+
+namespace LayoutCAD.ViewModel
 {
     public interface ICoordinate
     {
-        float ViewSpaceX { get; }
-        float ViewSpaceY { get; }
+        Point ViewSpacePoint {get;}
     }
 }

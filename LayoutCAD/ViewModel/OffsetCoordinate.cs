@@ -1,4 +1,6 @@
-﻿namespace LayoutCAD.ViewModel
+﻿using LayoutCAD.Model;
+
+namespace LayoutCAD.ViewModel
 {
     /// <summary>
     /// Sometimes we want to track a world-space object but with
@@ -6,14 +8,12 @@
     /// </summary>
     public class OffsetCoordinate : ICoordinate
     {
-        private readonly ModelCoordinate _worldCoordinate;
-        private readonly ViewCoordinate _offset;
+        private readonly Coordinate _worldCoordinate;
+        private readonly Coordinate _offset;
 
-        public float ViewSpaceX => _worldCoordinate.ViewSpaceX + _offset.ViewSpaceX;
+        public Point ViewSpacePoint => _worldCoordinate.ViewSpacePoint + _offset.ViewSpacePoint;
 
-        public float ViewSpaceY => _worldCoordinate.ViewSpaceY + _offset.ViewSpaceY;
-
-        public OffsetCoordinate(ModelCoordinate worldCoordinate, ViewCoordinate offset)
+        public OffsetCoordinate(Coordinate worldCoordinate, Coordinate offset)
         {
             _worldCoordinate = worldCoordinate;
             _offset = offset;

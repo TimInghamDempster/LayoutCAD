@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LayoutCAD.Model;
+using System;
 
 namespace LayoutCAD.ViewModel
 {
@@ -8,43 +9,50 @@ namespace LayoutCAD.ViewModel
     /// </summary>
     public class ViewPort
     {
-        public float ModelSpaceTop { get; private set; } = 0.0f;
-        public float ModelSpaceBottom => ModelSpaceTop + _apatureY;
-        public float ModelSpaceLeft { get; private set; } = 0.0f;
-        public float ModelSpaceRight => ModelSpaceLeft + _apatureX;
+        public Point Location { get; private set; }
+        public Point Apature { get; private set; }
 
-        private float _apatureX;
-        private float _apatureY;
+        public Point ModelSpaceBottomRight => Location + Apature;
 
-        public float ViewWidth { get; }
+        public Point ViewSize { get; }
 
-        internal float ToViewSpaceX(float modelX)
+        internal Point ToViewSpace(Point modelSpacePoint)
         {
-            return (modelX /_apatureX) * ViewWidth;
+            var translated = modelSpacePoint - Location;
+            var normalised = Point.ComponentWiseDiv(translated, Apature);
+            return Point.ComponentWiseMul(normalised, ViewSize);
         }
 
-        internal float ToViewSpaceY(float modelY)
-        {
-            return (modelY / _apatureY) * ViewHeight;
-        }
+         public Point ToModelSpace(Point viewSpacePoint)
+         {
+            var normalised = Point.ComponentWiseDiv(viewSpacePoint, ViewSize);
+            var scaled = Point.ComponentWiseMul(normalised, Apature);
+            return scaled + Location;
+         }
 
-        public float ViewHeight { get; }
-
-        public ViewPort(float apatureX, float apatureY)
+        public ViewPort(Point modelSpaceLocation, Point modelSpaceApature)
         {
-            _apatureX = apatureX;
-            _apatureY = apatureY;
-            ViewWidth = apatureX;
-            ViewHeight = apatureY;
+            Apature = modelSpaceApature;
+            Location = modelSpaceLocation;
+            ViewSize = modelSpaceApature;
         }
 
         internal void Zoom(float delta)
         {
             // Don't let the apature become negative
-            if (delta < 0.0f && (_apatureX < -delta || _apatureY < -delta)) return;
-            
-            _apatureX += delta;
-            _apatureY += delta;
+            if (delta < 0.0f && (Apature.X < -delta || Apature.Y < -delta)) return;
+
+            Apature += delta;
+        }
+
+        internal void StartDrag(double screenX, double screenY)
+        {
+            throw new NotImplementedException();
+        }
+
+        internal void Dragging(double screenX, double screenY)
+        {
+            throw new NotImplementedException();
         }
     }
 }
