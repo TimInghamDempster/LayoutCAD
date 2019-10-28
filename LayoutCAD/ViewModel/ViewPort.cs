@@ -10,20 +10,24 @@ namespace LayoutCAD.ViewModel
     public class ViewPort
     {
         private readonly Draggable _draggable;
+        private readonly Point _yFlip = new Point(1.0f, -1.0f);
 
         private Point _location;
         public Point Location => _location - DeltaToModelSpace(_draggable.CurrentOffset);
         public Point Apature { get; private set; }
 
-        public Point ModelSpaceBottomRight => Location + Apature;
+        public Point ModelSpaceBottomRight => Location + Point.ComponentWiseMul(Apature, _yFlip);
 
         public Point ViewSize { get; }
 
-        internal Point ToViewSpace(Point modelSpacePoint)
+        private float _aspectRatio;
+
+        public Point ToViewSpace(Point modelSpacePoint)
         {
             var translated = modelSpacePoint - Location;
             var normalised = Point.ComponentWiseDiv(translated, Apature);
-            return Point.ComponentWiseMul(normalised, ViewSize);
+            var rescaled = Point.ComponentWiseMul(normalised, ViewSize);
+            return Point.ComponentWiseMul(rescaled, _yFlip);
         }
 
         public Point ToModelSpace(Point viewSpacePoint)
@@ -36,8 +40,8 @@ namespace LayoutCAD.ViewModel
         // shouldn't be included in the conversion, only the scaling
         private Point DeltaToModelSpace(Point viewSpaceDelta)
         {
-
-            var normalised = Point.ComponentWiseDiv(viewSpaceDelta, ViewSize);
+            var flipped = Point.ComponentWiseMul(viewSpaceDelta, _yFlip);
+            var normalised = Point.ComponentWiseDiv(flipped, ViewSize);
             var scaled = Point.ComponentWiseMul(normalised, Apature);
             return scaled;
         }
@@ -48,27 +52,32 @@ namespace LayoutCAD.ViewModel
             _draggable = draggable;
             _location = modelSpaceLocation;
             ViewSize = modelSpaceApature;
+            _aspectRatio = modelSpaceApature.X / modelSpaceApature.Y;
         }
 
-        internal void Zoom(float delta)
+        public void Zoom(float delta)
         {
             // Don't let the apature become negative
-            if (delta < 0.0f && (Apature.X < -delta || Apature.Y < -delta)) return;
+            if (delta < 0.0f && (Apature.X <= -(delta * _aspectRatio) || Apature.Y <= -delta)) return;
 
-            Apature += delta;
+            Point aspectScale = new Point(_aspectRatio, 1.0f);
+            Point scaledDelta = aspectScale * delta;
+
+            Apature += scaledDelta;
+            _location -= Point.ComponentWiseMul(scaledDelta, _yFlip) * 0.5f;
         }
 
-        internal void StartDrag(double screenX, double screenY)
+        public void StartDrag(double screenX, double screenY)
         {
             _draggable.StartDrag(screenX, screenY);
         }
 
-        internal void Dragging(double screenX, double screenY)
+        public void Dragging(double screenX, double screenY)
         {
             _draggable.Dragging(screenX, screenY);
         }
 
-        internal void Drop()
+        public void Drop()
         {
             // Negative because we are dragging the model by changing the
             // apature, all other draggables change the model

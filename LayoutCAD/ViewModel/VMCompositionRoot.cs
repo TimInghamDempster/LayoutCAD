@@ -9,12 +9,12 @@ namespace LayoutCAD.ViewModel
     /// </summary>
     public class VMCompositionRoot
     {
-        private const float _screenWidth = 900.0f;
+        private const float _screenWidth = 1500.0f;
         private const float _screenHeight = 900.0f;
 
         private readonly ViewPort _viewPort = 
             new ViewPort(
-                new Point { X = 0.0f, Y = 0.0f },
+                new Point { X = 0.0f, Y = _screenHeight },
                 new Point { X = _screenWidth, Y = _screenHeight },
                 new Draggable());
         

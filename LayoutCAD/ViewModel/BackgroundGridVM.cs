@@ -12,28 +12,45 @@ namespace LayoutCAD.ViewModel
     /// </summary>
     public class BackgroundGridVM
     {
-        public float LineSeparation_mm => 150;
+        private const float _lineSeparation_mm = 150;
         public Point ViewSize => _viewPort.ViewSize;
 
         private readonly ViewPort _viewPort;
         private readonly Func<(float modelCoord, bool isHorizontal), GridLineVM> _lineFactory;
 
+        // Figure out the spacing in multiples of _lineSeparation
+        // required to fill the apature with ~10 lines
+        private float CalcLineSpacing(float apature)
+        {
+            const int targetCount = 10;
+
+            float targetSpacing = apature / targetCount;
+
+            // Quantize the target spacing
+            double multiplier = Math.Round(targetSpacing / _lineSeparation_mm);
+
+            double calculatedSpacing = multiplier * _lineSeparation_mm;
+
+            return (float)Math.Max(_lineSeparation_mm, calculatedSpacing);
+        }
+
         public IEnumerable<GridLineVM> GridLines
         {
             get
             {
-                var numHorizontalLines = (int)(Math.Ceiling(_viewPort.Apature.Y / LineSeparation_mm)) + 1;
-                var startPosVertical = (float)Math.Floor(_viewPort.Location.Y / LineSeparation_mm) * LineSeparation_mm;
-                for (int i = 0; i < numHorizontalLines; i++)
+                var lineSpacing = CalcLineSpacing(_viewPort.Apature.Y);
+                var linePos = (float)Math.Floor(_viewPort.ModelSpaceBottomRight.Y / lineSpacing) * lineSpacing;
+                while(linePos < _viewPort.Location.Y)
                 {
-                    yield return _lineFactory((i * LineSeparation_mm + startPosVertical, true));
+                    linePos += lineSpacing;
+                    yield return _lineFactory((linePos, true));
                 }
 
-                var numVerticalLines = (int)(Math.Ceiling(_viewPort.Apature.X / LineSeparation_mm)) + 1;
-                var startPosHorizontal = (float)Math.Floor(_viewPort.Location.X / LineSeparation_mm) * LineSeparation_mm;
-                for (int i = 0; i < numVerticalLines; i++)
+                linePos = (float)Math.Floor(_viewPort.Location.X / lineSpacing) * lineSpacing;
+                while (linePos < _viewPort.ModelSpaceBottomRight.X)
                 {
-                    yield return _lineFactory((i * LineSeparation_mm + startPosHorizontal, false));
+                    linePos += lineSpacing;
+                    yield return _lineFactory((linePos, false));
                 }
             }
         }

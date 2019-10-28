@@ -19,6 +19,10 @@ namespace LayoutCAD.Model
             => new Point { X = a.X + b.X, Y = a.Y + b.Y };
         public static Point operator +(Point p, float s)
             => new Point { X = p.X + s, Y = p.Y + s };
+        public static Point operator -(Point p, float s)
+            => p + (-s);
+        public static Point operator *(Point p, float s)
+            => new Point { X = p.X * s, Y = p.Y * s };
 
         // Never overlaod * for a vector class, there's way
         // too many ways to multiply vectors and it isn't obvious
@@ -27,5 +31,11 @@ namespace LayoutCAD.Model
             => new Point { X = a.X * b.X, Y = a.Y * b.Y };
         public static Point ComponentWiseDiv(Point a, Point b)
             => new Point { X = a.X / b.X, Y = a.Y / b.Y };
+
+        public Point(float x, float y)
+        {
+            X = x;
+            Y = y;
+        }
     }
 }
