@@ -12,26 +12,22 @@ namespace LayoutCAD.ViewModel
     /// </summary>
     public class BackgroundGridVM
     {
-        private const float _lineSeparation_mm = 150;
         public Point ViewSize => _viewPort.ViewSize;
 
         private readonly ViewPort _viewPort;
         private readonly Func<(float modelCoord, bool isHorizontal), GridLineVM> _lineFactory;
+        private const int _minTargetMultiplier = 1;
+        private const int _maxTargetMultiplier = 5;
+        private const float _targetMultiplierConstant = 50.0f;
+        private int _gridLineTargetMultiplier;
 
         // Figure out the spacing in multiples of _lineSeparation
         // required to fill the apature with ~10 lines
         private float CalcLineSpacing(float apature)
         {
-            const int targetCount = 10;
+            double pow2 = Math.Round(Math.Log(_viewPort.Apature.Y / _viewPort.ViewSize.Y, 2.0));
 
-            float targetSpacing = apature / targetCount;
-
-            // Quantize the target spacing
-            double multiplier = Math.Round(targetSpacing / _lineSeparation_mm);
-
-            double calculatedSpacing = multiplier * _lineSeparation_mm;
-
-            return (float)Math.Max(_lineSeparation_mm, calculatedSpacing);
+            return _gridLineTargetMultiplier * _targetMultiplierConstant * (float)Math.Pow(2.0, pow2);
         }
 
         public IEnumerable<GridLineVM> GridLines
@@ -40,7 +36,7 @@ namespace LayoutCAD.ViewModel
             {
                 var lineSpacing = CalcLineSpacing(_viewPort.Apature.Y);
                 var linePos = (float)Math.Floor(_viewPort.ModelSpaceBottomRight.Y / lineSpacing) * lineSpacing;
-                while(linePos < _viewPort.Location.Y)
+                while (linePos < _viewPort.Location.Y)
                 {
                     linePos += lineSpacing;
                     yield return _lineFactory((linePos, true));
@@ -55,12 +51,26 @@ namespace LayoutCAD.ViewModel
             }
         }
 
+        public int GridLineTargetMultiplier 
+        {
+            get { return _gridLineTargetMultiplier; }
+            set
+            {
+                if (value >= _minTargetMultiplier &&
+                    value <= _maxTargetMultiplier)
+                {
+                    _gridLineTargetMultiplier = value;
+                }
+            }
+        }
+
         public BackgroundGridVM(
             ViewPort viewPort,
             Func<(float modelCoord, bool isHorizontal), GridLineVM> lineFactory)
         {
             _viewPort = viewPort;
             _lineFactory = lineFactory;
+            _gridLineTargetMultiplier = 2;
         }
 
         public void OnMouseUp()

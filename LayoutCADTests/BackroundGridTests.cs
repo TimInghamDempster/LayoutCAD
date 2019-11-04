@@ -20,7 +20,33 @@ namespace LayoutCADTests
         {
             _backgroundVM.OnMouseWheel(-95.0f);
 
-            _backgroundVM.GridLines.Count().Should().Be(16);
+            _backgroundVM.GridLines.Count().Should().Be(24);
+        }
+
+        [Fact]
+        public void GridHasMinSpacing()
+        {
+            _backgroundVM.OnMouseWheel(-95.0f);
+
+            for (int i = 0; i < 100; i++)
+            {
+                _backgroundVM.GridLineTargetMultiplier--;
+            }
+
+            _backgroundVM.GridLines.Count().Should().Be(46);
+        }
+        
+        [Fact]
+        public void GridHasMaxSapcing()
+        {
+            _backgroundVM.OnMouseWheel(-95.0f);
+
+            for (int i = 0; i < 100; i++)
+            {
+                _backgroundVM.GridLineTargetMultiplier++;
+            }
+
+            _backgroundVM.GridLines.Count().Should().Be(10);
         }
     }
 }
