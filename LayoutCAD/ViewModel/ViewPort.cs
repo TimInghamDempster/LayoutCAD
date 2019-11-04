@@ -63,6 +63,9 @@ namespace LayoutCAD.ViewModel
             Point aspectScale = new Point(_aspectRatio, 1.0f);
             Point scaledDelta = aspectScale * delta;
 
+            float zoomFactor = Apature.Y / ViewSize.Y;
+            scaledDelta *= zoomFactor;
+
             Apature += scaledDelta;
             _location -= Point.ComponentWiseMul(scaledDelta, _yFlip) * 0.5f;
         }
