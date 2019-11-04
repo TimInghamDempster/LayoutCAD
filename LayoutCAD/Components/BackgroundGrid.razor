@@ -2,8 +2,8 @@
 <div>
     <input @onkeydown="OnKeyPress" />
     <svg 
-         width="@ViewModel.ViewSize.X" 
-         height="@ViewModel.ViewSize.Y"
+         width="@_viewModel?.ViewSize.X" 
+         height="@_viewModel?.ViewSize.Y"
          @onmousewheel="OnMouseWheel"
          @onmousemove="OnMouseMove"
          @onmousedown="OnMouseDown"
@@ -11,31 +11,63 @@
         <!-- We have a coloured rect underneath the grid lines and labels-->
         <rect width="100%" height="100%" style="fill:rgb(255,255,255);stroke-width:2;stroke:rgb(0,0,0)" />
         <!-- Now draw the grid lines, both horizontal and vertical lines are in the same collection-->
-        @foreach(var line in ViewModel.GridLines)
+        @if (_viewModel != null)
         {
-            <!-- The line itself-->
-            <line x1="@line.Start.ViewSpacePoint.X" x2="@line.End.ViewSpacePoint.X" y1="@line.Start.ViewSpacePoint.Y" y2="@line.End.ViewSpacePoint.Y" style="stroke-width:1;stroke:rgb(0,0,255)" />
-            <!-- And a label telling us which line it is, this is a little tricky
-                because blazor and svg both have a text tag that means different things
-                so we have to wrap it in an svg tag to disambiguate.  We could also wrap
-                it in a blazor text tag but that would break the dynamic content-->
-            <svg> <text x="@line.TextPos.ViewSpacePoint.X" y="@line.TextPos.ViewSpacePoint.Y">@line.Text</text></svg>
+            @foreach (var line in _viewModel.GridLines)
+            {
+                <!-- The line itself-->
+                <line x1="@line.Start.ViewSpacePoint.X" x2="@line.End.ViewSpacePoint.X" y1="@line.Start.ViewSpacePoint.Y" y2="@line.End.ViewSpacePoint.Y" style="stroke-width:1;stroke:rgb(0,0,255)" />
+                <!-- And a label telling us which line it is, this is a little tricky
+                    because blazor and svg both have a text tag that means different things
+                    so we have to wrap it in an svg tag to disambiguate.  We could also wrap
+                    it in a blazor text tag but that would break the dynamic content-->
+                <svg> <text x="@line.TextPos.ViewSpacePoint.X" y="@line.TextPos.ViewSpacePoint.Y">@line.Text</text></svg>
+            }
         }
     </svg>
 </div>
 @code {
+    private BackgroundGridVM? _viewModel;
     [Parameter]
-    public BackgroundGridVM ViewModel { set; private get; }
+    public BackgroundGridVM ViewModel
+    {
+        set
+        {
+            if (_viewModel != null)
+            {
+                _viewModel.PropertyChanged -= VMPropertyChanged;
+            }
+            _viewModel = value;
+            _viewModel.PropertyChanged += VMPropertyChanged;
+        }
+    }
+
+    private void VMPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        this.StateHasChanged();
+    }
+
+    public void StateChanged()
+    {
+        this.StateHasChanged();
+    }
 
     private void OnKeyPress(KeyboardEventArgs args)
     {
-        if(args.Key == "[")
+        if (_viewModel != null)
         {
-            ViewModel.GridLineTargetMultiplier--;
+            if (args.Key == "[")
+            {
+                _viewModel.GridLineSeparationMultiplier--;
+            }
+            else if (args.Key == "]")
+            {
+                _viewModel.GridLineSeparationMultiplier++;
+            }
         }
-        else if(args.Key == "]")
+        else
         {
-            ViewModel.GridLineTargetMultiplier++;
+            throw new ArgumentNullException(nameof(_viewModel));
         }
     }
 
@@ -44,22 +76,22 @@
         long leftButton = 1;
         if(args.Buttons == leftButton)
         {
-            ViewModel.OnMouseDown(args.ScreenX, args.ScreenY);
+            _viewModel?.OnMouseDown(args.ScreenX, args.ScreenY);
         }
     }
 
     private void OnMouseUp(MouseEventArgs args)
     {
-        ViewModel.OnMouseUp();
+        _viewModel?.OnMouseUp();
     }
 
     private void OnMouseWheel(WheelEventArgs args)
     {
-        ViewModel.OnMouseWheel((float)args.DeltaY);
+        _viewModel?.OnMouseWheel((float)args.DeltaY);
     }
 
     private void OnMouseMove(MouseEventArgs args)
     {
-        ViewModel.OnMouseMove(args.Buttons, args.ScreenX, args.ScreenY);
+        _viewModel?.OnMouseMove(args.Buttons, args.ScreenX, args.ScreenY);
     }
 }

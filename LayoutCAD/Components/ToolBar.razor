@@ -1,0 +1,18 @@
+﻿
+<button @onclick="RefineGridClick">+</button>
+<button @onclick="CoarsenGridClick">-</button>
+
+@code {
+    [Parameter]
+    public ToolBarVM? ViewModel { set; private get; }
+
+    private void RefineGridClick()
+    {
+        ViewModel?.RefineGrid();
+    }
+
+    private void CoarsenGridClick()
+    {
+       ViewModel?.CoarsenGrid();
+    }
+}

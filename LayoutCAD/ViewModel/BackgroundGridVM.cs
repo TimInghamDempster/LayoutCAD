@@ -10,7 +10,7 @@ namespace LayoutCAD.ViewModel
     /// for making sure that only the lines actually within the ViewPort
     /// are created
     /// </summary>
-    public class BackgroundGridVM
+    public class BackgroundGridVM : ViewModelBase
     {
         public Point ViewSize => _viewPort.ViewSize;
 
@@ -19,7 +19,7 @@ namespace LayoutCAD.ViewModel
         private const int _minTargetMultiplier = 1;
         private const int _maxTargetMultiplier = 5;
         private const float _targetMultiplierConstant = 50.0f;
-        private int _gridLineTargetMultiplier;
+        private int _gridLineSeparationMultiplier;
 
         // Figure out the spacing in multiples of _lineSeparation
         // required to fill the apature with ~10 lines
@@ -27,7 +27,7 @@ namespace LayoutCAD.ViewModel
         {
             double pow2 = Math.Round(Math.Log(_viewPort.Apature.Y / _viewPort.ViewSize.Y, 2.0));
 
-            return _gridLineTargetMultiplier * _targetMultiplierConstant * (float)Math.Pow(2.0, pow2);
+            return _gridLineSeparationMultiplier * _targetMultiplierConstant * (float)Math.Pow(2.0, pow2);
         }
 
         public IEnumerable<GridLineVM> GridLines
@@ -51,15 +51,16 @@ namespace LayoutCAD.ViewModel
             }
         }
 
-        public int GridLineTargetMultiplier 
+        public int GridLineSeparationMultiplier 
         {
-            get { return _gridLineTargetMultiplier; }
+            get { return _gridLineSeparationMultiplier; }
             set
             {
                 if (value >= _minTargetMultiplier &&
                     value <= _maxTargetMultiplier)
                 {
-                    _gridLineTargetMultiplier = value;
+                    _gridLineSeparationMultiplier = value;
+                    OnPropertyChanged();
                 }
             }
         }
@@ -70,7 +71,7 @@ namespace LayoutCAD.ViewModel
         {
             _viewPort = viewPort;
             _lineFactory = lineFactory;
-            _gridLineTargetMultiplier = 2;
+            _gridLineSeparationMultiplier = 2;
         }
 
         public void OnMouseUp()

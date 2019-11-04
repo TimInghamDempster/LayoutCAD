@@ -30,7 +30,7 @@ namespace LayoutCADTests
 
             for (int i = 0; i < 100; i++)
             {
-                _backgroundVM.GridLineTargetMultiplier--;
+                _backgroundVM.GridLineSeparationMultiplier--;
             }
 
             _backgroundVM.GridLines.Count().Should().Be(46);
@@ -43,7 +43,7 @@ namespace LayoutCADTests
 
             for (int i = 0; i < 100; i++)
             {
-                _backgroundVM.GridLineTargetMultiplier++;
+                _backgroundVM.GridLineSeparationMultiplier++;
             }
 
             _backgroundVM.GridLines.Count().Should().Be(10);

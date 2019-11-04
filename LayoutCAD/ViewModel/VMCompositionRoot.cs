@@ -20,6 +20,8 @@ namespace LayoutCAD.ViewModel
         
         public BackgroundGridVM BackgroundGridVM { get; }
 
+        public ToolBarVM ToolBarVM { get; }
+
         public VMCompositionRoot()
         {
             var offsetCoordFactory =
@@ -43,6 +45,8 @@ namespace LayoutCAD.ViewModel
                         new Coordinate(new Point { X = data.modelCoord, Y = _viewPort.ModelSpaceBottomRight.Y }, true, _viewPort),
                         data.isHorizontal,
                         offsetCoordFactory));
+
+            ToolBarVM = new ToolBarVM(BackgroundGridVM);
         }
     }
 }

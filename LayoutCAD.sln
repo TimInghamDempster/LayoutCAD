@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.29403.142
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LayoutCAD", "LayoutCAD\LayoutCAD.csproj", "{5008D494-13A2-48B4-92E7-9121A31C76E9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LayoutCADTests", "LayoutCADTests\LayoutCADTests.csproj", "{9E35ABF3-8FEB-4A5D-8315-BDF5E5CE02B8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LayoutCADTests", "LayoutCADTests\LayoutCADTests.csproj", "{9E35ABF3-8FEB-4A5D-8315-BDF5E5CE02B8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
