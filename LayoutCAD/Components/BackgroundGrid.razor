@@ -1,4 +1,6 @@
 ﻿<!-- The View for the backing grid, starts with the background rect-->
+<div>
+    <input @onkeydown="OnKeyPress" />
     <svg 
          width="@ViewModel.ViewSize.X" 
          height="@ViewModel.ViewSize.Y"
@@ -7,7 +9,7 @@
          @onmousedown="OnMouseDown"
          @onmouseup="OnMouseUp">
         <!-- We have a coloured rect underneath the grid lines and labels-->
-        <rect width="100%" height="100%" style="fill:rgb(128,128,255);stroke-width:0;stroke:rgb(0,0,0)" />
+        <rect width="100%" height="100%" style="fill:rgb(255,255,255);stroke-width:2;stroke:rgb(0,0,0)" />
         <!-- Now draw the grid lines, both horizontal and vertical lines are in the same collection-->
         @foreach(var line in ViewModel.GridLines)
         {
@@ -20,9 +22,22 @@
             <svg> <text x="@line.TextPos.ViewSpacePoint.X" y="@line.TextPos.ViewSpacePoint.Y">@line.Text</text></svg>
         }
     </svg>
+</div>
 @code {
     [Parameter]
     public BackgroundGridVM ViewModel { set; private get; }
+
+    private void OnKeyPress(KeyboardEventArgs args)
+    {
+        if(args.Key == "[")
+        {
+            ViewModel.GridLineTargetMultiplier--;
+        }
+        else if(args.Key == "]")
+        {
+            ViewModel.GridLineTargetMultiplier++;
+        }
+    }
 
     private void OnMouseDown(MouseEventArgs args)
     {
