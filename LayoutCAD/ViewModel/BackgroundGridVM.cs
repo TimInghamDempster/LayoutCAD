@@ -1,4 +1,5 @@
 ﻿using LayoutCAD.Model;
+using Microsoft.AspNetCore.Components.Web;
 using System;
 using System.Collections.Generic;
 
@@ -10,7 +11,7 @@ namespace LayoutCAD.ViewModel
     /// for making sure that only the lines actually within the ViewPort
     /// are created
     /// </summary>
-    public class BackgroundGridVM : ViewModelBase
+    public class BackgroundGridVM : ViewModelBase, IContextMenuViewModel
     {
         public Point ViewSize => _viewPort.ViewSize;
 
@@ -65,6 +66,17 @@ namespace LayoutCAD.ViewModel
             }
         }
 
+        RelayCommand _addGeometryCommand = new RelayCommand("Add Geometry", () => { }, () => true);
+        public IEnumerable<IMenuItem> MenuItems
+        {
+            get
+            {
+                yield return _addGeometryCommand;
+            }
+        }
+
+        public string ContextMenuName => "GridMenu";
+
         public BackgroundGridVM(
             ViewPort viewPort,
             Func<(float modelCoord, bool isHorizontal), GridLineVM> lineFactory)
@@ -95,6 +107,18 @@ namespace LayoutCAD.ViewModel
         public void OnMouseWheel(float delta)
         {
             _viewPort.Zoom(delta);
+        }
+
+        public void OnKeyPress(string key)
+        {
+            if (key == "[")
+            {
+                GridLineSeparationMultiplier--;
+            }
+            else if (key == "]")
+            {
+                GridLineSeparationMultiplier++;
+            }
         }
     }
 }

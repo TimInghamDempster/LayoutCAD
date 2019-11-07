@@ -1,32 +1,28 @@
 ﻿<!-- The View for the backing grid, starts with the background rect-->
-<div>
-    <input @onkeydown="OnKeyPress" />
-    <svg 
-         width="@_viewModel?.ViewSize.X" 
-         height="@_viewModel?.ViewSize.Y"
-         @onmousewheel="OnMouseWheel"
-         @onmousemove="OnMouseMove"
-         @onmousedown="OnMouseDown"
-         @onmouseup="OnMouseUp">
-        <!-- We have a coloured rect underneath the grid lines and labels-->
-        <rect width="100%" height="100%" style="fill:rgb(255,255,255);stroke-width:2;stroke:rgb(0,0,0)" />
-        <!-- Now draw the grid lines, both horizontal and vertical lines are in the same collection-->
-        @if (_viewModel != null)
+@if (_viewModel != null)
+{
+    <!-- We have a coloured rect underneath the grid lines and labels-->
+    <rect width="100%" height="100%" style="fill:rgb(255,255,255);stroke-width:2;stroke:rgb(0,0,0)"
+        @onmousewheel="OnMouseWheel"
+        @onmousemove="OnMouseMove"
+        @onmousedown="OnMouseDown"
+        @onmouseup="OnMouseUp" />
+    <!-- Now draw the grid lines, both horizontal and vertical lines are in the same collection-->
+    @if (_viewModel != null)
+    {
+        @foreach (var line in _viewModel.GridLines)
         {
-            @foreach (var line in _viewModel.GridLines)
-            {
-                <!-- The line itself-->
-                <line x1="@line.Start.ViewSpacePoint.X" x2="@line.End.ViewSpacePoint.X" y1="@line.Start.ViewSpacePoint.Y" y2="@line.End.ViewSpacePoint.Y" style="stroke-width:1;stroke:rgb(0,0,255)" />
-                <!-- And a label telling us which line it is, this is a little tricky
-                    because blazor and svg both have a text tag that means different things
-                    so we have to wrap it in an svg tag to disambiguate.  We could also wrap
-                    it in a blazor text tag but that would break the dynamic content-->
-                <svg> <text x="@line.TextPos.ViewSpacePoint.X" y="@line.TextPos.ViewSpacePoint.Y">@line.Text</text></svg>
-            }
+            <!-- The line itself-->
+            <line x1="@line.Start.ViewSpacePoint.X" x2="@line.End.ViewSpacePoint.X" y1="@line.Start.ViewSpacePoint.Y" y2="@line.End.ViewSpacePoint.Y" style="stroke-width:1;stroke:rgb(0,0,255)" />
+            <!-- And a label telling us which line it is, this is a little tricky
+                because blazor and svg both have a text tag that means different things
+                so we have to wrap it in an svg tag to disambiguate.  We could also wrap
+                it in a blazor text tag but that would break the dynamic content-->
+            <svg> <text x="@line.TextPos.ViewSpacePoint.X" y="@line.TextPos.ViewSpacePoint.Y">@line.Text</text></svg>
         }
-    </svg>
-</div>
-@code {
+    }
+}
+    @code {
     private BackgroundGridVM? _viewModel;
     [Parameter]
     public BackgroundGridVM ViewModel
@@ -52,29 +48,10 @@
         this.StateHasChanged();
     }
 
-    private void OnKeyPress(KeyboardEventArgs args)
-    {
-        if (_viewModel != null)
-        {
-            if (args.Key == "[")
-            {
-                _viewModel.GridLineSeparationMultiplier--;
-            }
-            else if (args.Key == "]")
-            {
-                _viewModel.GridLineSeparationMultiplier++;
-            }
-        }
-        else
-        {
-            throw new ArgumentNullException(nameof(_viewModel));
-        }
-    }
-
     private void OnMouseDown(MouseEventArgs args)
     {
         long leftButton = 1;
-        if(args.Buttons == leftButton)
+        if (args.Buttons == leftButton)
         {
             _viewModel?.OnMouseDown(args.ScreenX, args.ScreenY);
         }

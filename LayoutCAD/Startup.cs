@@ -7,6 +7,7 @@ namespace LayoutCAD
     {
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddBlazorContextMenu();
         }
 
         public void Configure(IComponentsApplicationBuilder app)

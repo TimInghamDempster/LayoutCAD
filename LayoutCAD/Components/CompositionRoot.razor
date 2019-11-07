@@ -2,12 +2,23 @@
 <!-- View-->
 <ToolBar ViewModel="@_vmCompRoot.ToolBarVM" />
 <br />
-<BackgroundGrid ViewModel="@_vmCompRoot.BackgroundGridVM"/>
-
+<BoundContextMenu ViewModel="@_vmCompRoot.BackgroundGridVM"/>
+<ContextMenuTrigger MenuId="@_vmCompRoot.BackgroundGridVM.ContextMenuName">
+    <input @onkeydown="OnKeyPress" />
+    <svg width="@_vmCompRoot.BackgroundGridVM.ViewSize.X"
+            height="@_vmCompRoot.BackgroundGridVM.ViewSize.Y">
+        <BackgroundGrid ViewModel="@_vmCompRoot.BackgroundGridVM" />
+    </svg>
+</ContextMenuTrigger>
 <h3>LayoutCAD</h3>
 
 @code {
     // Intellisense seems to have flaked out in the components, so do the
     // heavy lifting in a regular class that we create an instance of
     private readonly VMCompositionRoot _vmCompRoot = new VMCompositionRoot();
+
+    private void OnKeyPress(KeyboardEventArgs args)
+    {
+        _vmCompRoot.BackgroundGridVM.OnKeyPress(args.Key);
+    }
 }

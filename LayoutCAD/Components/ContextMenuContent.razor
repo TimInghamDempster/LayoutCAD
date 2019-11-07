@@ -1,0 +1,23 @@
+﻿@if(ViewModel != null)
+{ 
+    @foreach (var item in ViewModel.MenuItems)
+    {
+        @if (item is ICommand command)
+        {
+            <Item Enabled="@command.CanExecute()" OnClick="@command.Execute">@command.ContextMenuName</Item>
+        }
+        else if (item is IContextMenuViewModel subMenu)
+        {
+            <Item>
+                @item.ContextMenuName
+            <SubMenu>
+                <ContextMenuContent ViewModel="subMenu" />
+            </SubMenu>
+        </Item>
+        }
+    }
+}
+@code {
+    [Parameter]
+    public IContextMenuViewModel? ViewModel { set; private get; }
+}

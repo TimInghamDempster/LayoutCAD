@@ -1,0 +1,10 @@
+﻿@if (ViewModel != null)
+{
+    <ContextMenu Id="@ViewModel.ContextMenuName">
+        <ContextMenuContent ViewModel="@ViewModel"/>
+    </ContextMenu>
+}
+    @code {
+    [Parameter]
+    public IContextMenuViewModel? ViewModel { set; private get; }
+    }
