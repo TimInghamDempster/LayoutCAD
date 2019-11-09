@@ -1,4 +1,5 @@
-﻿using LayoutCAD.Model;
+﻿using System;
+using LayoutCAD.Model;
 
 namespace LayoutCAD.ViewModel
 {
@@ -8,15 +9,24 @@ namespace LayoutCAD.ViewModel
     /// </summary>
     public class OffsetCoordinate : ICoordinate
     {
-        private readonly Coordinate _worldCoordinate;
+        private readonly CoordinateVM _worldCoordinate;
         private readonly Coordinate _offset;
 
-        public Point ViewSpacePoint => _worldCoordinate.ViewSpacePoint + _offset.ViewSpacePoint;
+        public event Action? PointChanged;
 
-        public OffsetCoordinate(Coordinate worldCoordinate, Coordinate offset)
+        public Point Point => _worldCoordinate.Point + _offset.Point;
+
+
+        public OffsetCoordinate(CoordinateVM worldCoordinate, Coordinate offset)
         {
             _worldCoordinate = worldCoordinate;
             _offset = offset;
+            _worldCoordinate.PointChanged += OnPointChanged;
+        }
+
+        private void OnPointChanged()
+        {
+            PointChanged?.Invoke();
         }
     }
 }

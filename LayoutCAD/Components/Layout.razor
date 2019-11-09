@@ -1,0 +1,30 @@
+﻿
+@if (_viewModel != null)
+{
+    @foreach (var pathVM in _viewModel.PathVMs)
+    {
+        <Path ViewModel="pathVM"/>
+    }
+}
+
+@code { 
+    private LayoutVM? _viewModel;
+    [Parameter]
+    public LayoutVM ViewModel
+    {
+        set
+        {
+            if (_viewModel != null)
+            {
+                _viewModel.PropertyChanged -= VMPropertyChanged;
+            }
+            _viewModel = value;
+            _viewModel.PropertyChanged += VMPropertyChanged;
+        }
+    }
+
+    private void VMPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        this.StateHasChanged();
+    }
+}

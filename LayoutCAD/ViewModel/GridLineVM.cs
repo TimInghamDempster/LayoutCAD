@@ -15,10 +15,10 @@ namespace LayoutCAD.ViewModel
         public ICoordinate TextPos { get; }
 
         public GridLineVM(
-            Coordinate start,
-            Coordinate end,
+            CoordinateVM start,
+            CoordinateVM end,
             bool isHorizontal,
-            Func<(Coordinate modelPos, Point offset), OffsetCoordinate> offsetCoordFactory)
+            Func<(CoordinateVM modelPos, Point offset), OffsetCoordinate> offsetCoordFactory)
         {
             Start = start;
             End = end;
@@ -28,12 +28,12 @@ namespace LayoutCAD.ViewModel
 
             if (isHorizontal)
             {
-                Text = start.ModelSpacePoint.Y.ToString();
+                Text = start.ModelSpaceCoordinate.Point.Y.ToString();
                 TextPos = offsetCoordFactory((start, new Point { X = horizontalPad, Y = 0 }));
             }
             else
             {
-                Text = start.ModelSpacePoint.X.ToString();
+                Text = start.ModelSpaceCoordinate.Point.X.ToString();
                 TextPos = offsetCoordFactory((end, new Point { X = 0, Y = -verticalPad }));
             }
 

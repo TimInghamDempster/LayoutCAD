@@ -22,6 +22,8 @@ namespace LayoutCAD.ViewModel
 
         private float _aspectRatio;
 
+        public event Action? ViewPortChanged;
+
         public Point ToViewSpace(Point modelSpacePoint)
         {
             var translated = modelSpacePoint - Location;
@@ -68,6 +70,8 @@ namespace LayoutCAD.ViewModel
 
             Apature += scaledDelta;
             _location -= Point.ComponentWiseMul(scaledDelta, _yFlip) * 0.5f;
+
+            ViewPortChanged?.Invoke();
         }
 
         public void StartDrag(double screenX, double screenY)
@@ -78,6 +82,7 @@ namespace LayoutCAD.ViewModel
         public void Dragging(double screenX, double screenY)
         {
             _draggable.Dragging(screenX, screenY);
+            ViewPortChanged?.Invoke();
         }
 
         public void Drop()

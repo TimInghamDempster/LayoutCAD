@@ -1,0 +1,31 @@
+﻿
+@if (_viewModel != null)
+{
+    <path d="
+          M @_viewModel.Coordinates[0].Point.X @_viewModel.Coordinates[0].Point.Y
+          C @_viewModel.Coordinates[1].Point.X @_viewModel.Coordinates[1].Point.Y,
+            @_viewModel.Coordinates[2].Point.X @_viewModel.Coordinates[2].Point.Y, 
+            @_viewModel.Coordinates[3].Point.X @_viewModel.Coordinates[3].Point.Y" 
+          stroke="black" stroke-dasharray="8" fill="transparent" />
+}
+
+@code {
+    private PathVM? _viewModel;
+    [Parameter]
+    public PathVM ViewModel
+    {
+        set
+        {
+            if (_viewModel != null)
+            {
+                _viewModel.PropertyChanged -= VMPropertyChanged;
+            }
+            _viewModel = value;
+            _viewModel.PropertyChanged += VMPropertyChanged;
+        }
+    }
+    private void VMPropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        this.StateHasChanged();
+    }
+}

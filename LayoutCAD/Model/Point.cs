@@ -32,6 +32,29 @@ namespace LayoutCAD.Model
         public static Point ComponentWiseDiv(Point a, Point b)
             => new Point { X = a.X / b.X, Y = a.Y / b.Y };
 
+        public static bool operator ==(Point p1, Point p2)
+        {
+            return p1.Equals(p2);
+        }
+
+        public static bool operator !=(Point p1, Point p2)
+        {
+            return !p1.Equals(p2);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is Point p2)
+            {
+                return X == p2.X && Y == p2.Y;
+            }
+            return false;
+        }
+        public override int GetHashCode()
+        {
+            return X.GetHashCode() ^ Y.GetHashCode();
+        }
+
         public Point(float x, float y)
         {
             X = x;

@@ -20,31 +20,49 @@ namespace LayoutCAD.ViewModel
         
         public BackgroundGridVM BackgroundGridVM { get; }
 
+        public LayoutVM LayoutVM { get; }
+
         public ToolBarVM ToolBarVM { get; }
 
         public VMCompositionRoot()
         {
             var offsetCoordFactory =
-                new Func<(Coordinate modelPos, Point offset), OffsetCoordinate>(
+                new Func<(CoordinateVM modelPos, Point offset), OffsetCoordinate>(
                     (args) => 
                     new OffsetCoordinate(
                         args.modelPos,
-                        new Coordinate(args.offset, false, _viewPort)));
+                        new Coordinate(args.offset)));
+
+            var layout = new Layout(() => new Path());
+
+            LayoutVM = new LayoutVM(
+                layout,
+                (path) => new PathVM(path, _viewPort));
 
             BackgroundGridVM = new BackgroundGridVM(
                 _viewPort,
                 (data) =>
                 data.isHorizontal ?
                     new GridLineVM(
-                        new Coordinate(new Point { X = _viewPort.Location.X, Y = data.modelCoord }, true, _viewPort),
-                        new Coordinate(new Point { X = _viewPort.ModelSpaceBottomRight.X, Y = data.modelCoord }, true, _viewPort),
+                        new CoordinateVM(
+                            new Coordinate(new Point { X = _viewPort.Location.X, Y = data.modelCoord }),
+                            _viewPort),
+                        new CoordinateVM(
+                            new Coordinate(new Point { X = _viewPort.ModelSpaceBottomRight.X, Y = data.modelCoord }),
+                            _viewPort),
                         data.isHorizontal,
                         offsetCoordFactory) :
                     new GridLineVM(
-                        new Coordinate(new Point { X = data.modelCoord, Y = _viewPort.Location.Y }, true, _viewPort),
-                        new Coordinate(new Point { X = data.modelCoord, Y = _viewPort.ModelSpaceBottomRight.Y }, true, _viewPort),
+                        new CoordinateVM(
+                            new Coordinate(new Point { X = data.modelCoord, Y = _viewPort.Location.Y }),
+                            _viewPort),
+                        new CoordinateVM(
+                            new Coordinate(new Point { X = data.modelCoord, Y = _viewPort.ModelSpaceBottomRight.Y }),
+                            _viewPort),
                         data.isHorizontal,
-                        offsetCoordFactory));
+                        offsetCoordFactory),
+                LayoutVM);
+
 
             ToolBarVM = new ToolBarVM(BackgroundGridVM);
         }

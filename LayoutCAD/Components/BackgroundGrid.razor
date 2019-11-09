@@ -13,12 +13,12 @@
         @foreach (var line in _viewModel.GridLines)
         {
             <!-- The line itself-->
-            <line x1="@line.Start.ViewSpacePoint.X" x2="@line.End.ViewSpacePoint.X" y1="@line.Start.ViewSpacePoint.Y" y2="@line.End.ViewSpacePoint.Y" style="stroke-width:1;stroke:rgb(0,0,255)" />
+            <line x1="@line.Start.Point.X" x2="@line.End.Point.X" y1="@line.Start.Point.Y" y2="@line.End.Point.Y" style="stroke-width:1;stroke:rgb(0,0,255)"/>
             <!-- And a label telling us which line it is, this is a little tricky
                 because blazor and svg both have a text tag that means different things
                 so we have to wrap it in an svg tag to disambiguate.  We could also wrap
                 it in a blazor text tag but that would break the dynamic content-->
-            <svg> <text x="@line.TextPos.ViewSpacePoint.X" y="@line.TextPos.ViewSpacePoint.Y">@line.Text</text></svg>
+            <svg> <text x="@line.TextPos.Point.X" y="@line.TextPos.Point.Y" pointer-events="none">@line.Text</text></svg>
         }
     }
 }

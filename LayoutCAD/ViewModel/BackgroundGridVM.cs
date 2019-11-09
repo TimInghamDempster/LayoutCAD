@@ -20,17 +20,11 @@ namespace LayoutCAD.ViewModel
         private const int _minTargetMultiplier = 1;
         private const int _maxTargetMultiplier = 5;
         private const float _targetMultiplierConstant = 50.0f;
+        
         private int _gridLineSeparationMultiplier;
 
-        // Figure out the spacing in multiples of _lineSeparation
-        // required to fill the apature with ~10 lines
-        private float CalcLineSpacing(float apature)
-        {
-            double pow2 = Math.Round(Math.Log(_viewPort.Apature.Y / _viewPort.ViewSize.Y, 2.0));
-
-            return _gridLineSeparationMultiplier * _targetMultiplierConstant * (float)Math.Pow(2.0, pow2);
-        }
-
+        private readonly LayoutVM _layoutVM;
+        
         public IEnumerable<GridLineVM> GridLines
         {
             get
@@ -66,12 +60,11 @@ namespace LayoutCAD.ViewModel
             }
         }
 
-        RelayCommand _addGeometryCommand = new RelayCommand("Add Geometry", () => { }, () => true);
         public IEnumerable<IMenuItem> MenuItems
         {
             get
             {
-                yield return _addGeometryCommand;
+                yield return _layoutVM.AddPathCommand;
             }
         }
 
@@ -79,11 +72,23 @@ namespace LayoutCAD.ViewModel
 
         public BackgroundGridVM(
             ViewPort viewPort,
-            Func<(float modelCoord, bool isHorizontal), GridLineVM> lineFactory)
+            Func<(float modelCoord, bool isHorizontal), GridLineVM> lineFactory,
+            LayoutVM layout)
         {
             _viewPort = viewPort;
             _lineFactory = lineFactory;
             _gridLineSeparationMultiplier = 2;
+            _layoutVM = layout;
+
+        }
+
+        // Figure out the spacing in multiples of _lineSeparation
+        // required to fill the apature with ~10 lines
+        private float CalcLineSpacing(float apature)
+        {
+            double pow2 = Math.Round(Math.Log(_viewPort.Apature.Y / _viewPort.ViewSize.Y, 2.0));
+
+            return _gridLineSeparationMultiplier * _targetMultiplierConstant * (float)Math.Pow(2.0, pow2);
         }
 
         public void OnMouseUp()
